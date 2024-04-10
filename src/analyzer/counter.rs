@@ -1,4 +1,5 @@
-use std::fs;
+use std::fs::File;
+use std::io::BufReader;
 use std::path::PathBuf;
 
 use tokio::sync::mpsc::Receiver;
@@ -32,12 +33,15 @@ impl Counter {
                     .last()
                     .unwrap_or("nothing_file");
 
-                let content = fs::read(x.clone()).unwrap_or_else(|_| {
-                    println!("can't read file:{}", x.to_str().unwrap());
-                    vec![]
-                });
+                // let content = fs::read(x.clone()).unwrap_or_else(|_| {
+                //     println!("can't read file:{}", x.to_str().unwrap());
+                //     vec![]
+                // });
 
-                result.add(postfix, content)
+                // result.add(postfix, content)
+
+                let content = BufReader::new(File::open(x.clone()).unwrap());
+                result.add(postfix, content);
             }
 
             if let Err(e) = self.output_channel.send(result).await {
