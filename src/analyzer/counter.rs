@@ -40,8 +40,13 @@ impl Counter {
 
                 // result.add(postfix, content)
 
-                let content = BufReader::new(File::open(x.clone()).unwrap());
-                result.add(postfix, content);
+                match File::open(x.clone()) {
+                    Ok(file) => {
+                        let content = BufReader::new(file);
+                        result.add(postfix, content);
+                    }
+                    Err(_) => println!("can't read file:{}", x.to_str().unwrap()),
+                }
             }
 
             if let Err(e) = self.output_channel.send(result).await {
