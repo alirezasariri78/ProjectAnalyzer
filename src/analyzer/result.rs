@@ -48,11 +48,11 @@ impl AnalyzeResult {
         Self(vec![])
     }
 
-    pub fn add(&mut self, postfix: &str, /*  content: Vec<u8>*/ content: BufReader<File>) {
+    pub fn add(&mut self, postfix: &str, content: BufReader<File>) {
         let position = self.0.iter().position(|x| x.postfix == postfix);
 
-        let mut lines = 0; //content.iter().filter(|i| **i == b'\n').count();
-        let mut empty_lines = 0; //content.iter().filter(|lines| **lines).count();
+        let mut lines = 0;
+        let mut empty_lines = 0;
         for line in content.lines() {
             if line.unwrap().trim().is_empty() {
                 empty_lines += 1;
@@ -65,6 +65,7 @@ impl AnalyzeResult {
             Some(position) => {
                 self.0[position].files += 1;
                 self.0[position].lines += lines;
+                self.0[position].empty_lines += empty_lines;
             }
             None => self.0.push(AnalyzeResultItem::new(
                 postfix.to_string(),

@@ -33,13 +33,6 @@ impl Counter {
                     .last()
                     .unwrap_or("nothing_file");
 
-                // let content = fs::read(x.clone()).unwrap_or_else(|_| {
-                //     println!("can't read file:{}", x.to_str().unwrap());
-                //     vec![]
-                // });
-
-                // result.add(postfix, content)
-
                 match File::open(x.clone()) {
                     Ok(file) => {
                         let content = BufReader::new(file);
